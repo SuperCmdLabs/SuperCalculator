@@ -1,0 +1,607 @@
+{
+    "summary": {
+      "total": 706,
+      "passed": 621,
+      "failed": 85,
+      "errors": 0,
+      "passRate": "88.0%"
+    },
+    "failures": [
+      {
+        "input": "10 % 3",
+        "description": "modulo",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: '3' at position 5"
+      },
+      {
+        "input": "max(1, 5, 3)",
+        "description": "max of three numbers",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Expected ')' at position 8, got ','"
+      },
+      {
+        "input": "min(1, 5, 3)",
+        "description": "min of three numbers",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Expected ')' at position 8, got ','"
+      },
+      {
+        "input": "1 cup to ml",
+        "description": "cup to ml",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unexpected character: 'c' at position 2"
+      },
+      {
+        "input": "500 ml to cup",
+        "description": "ml to cups",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unexpected character: 'm' at position 4"
+      },
+      {
+        "input": "1 km² to m²",
+        "description": "sq km to sq meters",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unexpected character: 'k' at position 2"
+      },
+      {
+        "input": "1 acre to m²",
+        "description": "acre to sq meters",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unexpected character: 'a' at position 2"
+      },
+      {
+        "input": "1 mi² to km²",
+        "description": "sq miles to sq km",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unexpected character: 'm' at position 2"
+      },
+      {
+        "input": "1 ft² to m²",
+        "description": "sq feet to sq meters",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unexpected character: 'f' at position 2"
+      },
+      {
+        "input": "144 in² to ft²",
+        "description": "sq inches to sq feet",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unexpected character: 'i' at position 4"
+      },
+      {
+        "input": "1 yd² to ft²",
+        "description": "sq yards to sq feet",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unexpected character: 'y' at position 2"
+      },
+      {
+        "input": "10000 m² to hectare",
+        "description": "sq meters to hectare",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unexpected character: 'm' at position 6"
+      },
+      {
+        "input": "convert 5 km to miles",
+        "description": "natural: convert X to Y",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unknown identifier: 'convert'"
+      },
+      {
+        "input": "5 kilograms to pounds",
+        "description": "natural: kilograms full name",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unexpected character: 'k' at position 2"
+      },
+      {
+        "input": "1 pound to kilograms",
+        "description": "natural: pound full",
+        "expectedType": "unit",
+        "actualType": "error",
+        "result": "Unexpected character: 'p' at position 2"
+      },
+      {
+        "input": "time in colombia",
+        "description": "time in colombia",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown timezone: 'colombia'"
+      },
+      {
+        "input": "time in peru",
+        "description": "time in peru",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown timezone: 'peru'"
+      },
+      {
+        "input": "time in chile",
+        "description": "time in chile",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown timezone: 'chile'"
+      },
+      {
+        "input": "utc to ist",
+        "description": "utc to ist",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown identifier: 'utc'"
+      },
+      {
+        "input": "pst to est",
+        "description": "pst to est",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown identifier: 'pst'"
+      },
+      {
+        "input": "ist to pst",
+        "description": "ist to pst",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown identifier: 'ist'"
+      },
+      {
+        "input": "12:30 ist to madison",
+        "description": "specific time IST to madison",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unexpected character: ':' at position 2"
+      },
+      {
+        "input": "3:00 pm est to pst",
+        "description": "specific time EST to PST",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unexpected character: ':' at position 1"
+      },
+      {
+        "input": "9:00 am pst to ist",
+        "description": "morning PST to IST",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unexpected character: ':' at position 1"
+      },
+      {
+        "input": "midnight utc to ist",
+        "description": "midnight UTC to IST",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown identifier: 'midnight'"
+      },
+      {
+        "input": "noon est to pst",
+        "description": "noon EST to PST",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown identifier: 'noon'"
+      },
+      {
+        "input": "est to jst",
+        "description": "east coast to japan",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown identifier: 'est'"
+      },
+      {
+        "input": "gmt to ist",
+        "description": "gmt to india",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown identifier: 'gmt'"
+      },
+      {
+        "input": "cet to pst",
+        "description": "central europe to pacific",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown identifier: 'cet'"
+      },
+      {
+        "input": "5:30 pm ist to est",
+        "description": "5:30 pm IST to EST",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unexpected character: ':' at position 1"
+      },
+      {
+        "input": "10:00 jst to cet",
+        "description": "10am Japan to Central Europe",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unexpected character: ':' at position 2"
+      },
+      {
+        "input": "14:00 utc to pst",
+        "description": "2pm UTC to PST",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unexpected character: ':' at position 2"
+      },
+      {
+        "input": "23:59 ist to utc",
+        "description": "late night IST to UTC",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unexpected character: ':' at position 2"
+      },
+      {
+        "input": "00:00 utc to ist",
+        "description": "midnight UTC to IST",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unexpected character: ':' at position 2"
+      },
+      {
+        "input": "what time is it in tokyo",
+        "description": "natural: what time in tokyo",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown identifier: 'what'"
+      },
+      {
+        "input": "whats the time in paris",
+        "description": "natural: whats the time",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown identifier: 'whats'"
+      },
+      {
+        "input": "now in tokyo",
+        "description": "natural: now in city",
+        "expectedType": "time",
+        "actualType": "error",
+        "result": "Unknown identifier: 'now'"
+      },
+      {
+        "input": "day after tomorrow",
+        "description": "day after tomorrow",
+        "expectedType": "date",
+        "actualType": "error",
+        "result": "Unknown identifier: 'day'"
+      },
+      {
+        "input": "day before yesterday",
+        "description": "day before yesterday",
+        "expectedType": "date",
+        "actualType": "error",
+        "result": "Unknown identifier: 'day'"
+      },
+      {
+        "input": "0",
+        "description": "unix epoch",
+        "expectedType": "date",
+        "actualType": "math",
+        "result": "0"
+      },
+      {
+        "input": "tomorrow to unix",
+        "description": "tomorrow to unix",
+        "expectedType": "date",
+        "actualType": "error",
+        "result": "Cannot parse date: 'tomorrow'"
+      },
+      {
+        "input": "whats today",
+        "description": "natural: whats today",
+        "expectedType": "date",
+        "actualType": "error",
+        "result": "Unknown identifier: 'whats'"
+      },
+      {
+        "input": "what's today's date",
+        "description": "natural: what's today's date",
+        "expectedType": "date",
+        "actualType": "error",
+        "result": "Unknown identifier: 'what'"
+      },
+      {
+        "input": "what day is it",
+        "description": "natural: what day is it",
+        "expectedType": "date",
+        "actualType": "error",
+        "result": "Unknown identifier: 'what'"
+      },
+      {
+        "input": "what date is tomorrow",
+        "description": "natural: what date is tomorrow",
+        "expectedType": "date",
+        "actualType": "error",
+        "result": "Unknown identifier: 'what'"
+      },
+      {
+        "input": "todays date",
+        "description": "natural: todays date",
+        "expectedType": "date",
+        "actualType": "error",
+        "result": "Unknown identifier: 'todays'"
+      },
+      {
+        "input": "what day is next monday",
+        "description": "natural: what day is next monday",
+        "expectedType": "date",
+        "actualType": "error",
+        "result": "Unknown identifier: 'what'"
+      },
+      {
+        "input": "when is next friday",
+        "description": "natural: when is next friday",
+        "expectedType": "date",
+        "actualType": "error",
+        "result": "Unknown identifier: 'when'"
+      },
+      {
+        "input": "convert 100 usd to inr",
+        "description": "natural: convert X to Y",
+        "expectedType": "currency",
+        "actualType": "error",
+        "result": "Unknown identifier: 'convert'"
+      },
+      {
+        "input": "how much is 100 usd in inr",
+        "description": "natural: how much is X in Y",
+        "expectedType": "currency",
+        "actualType": "error",
+        "result": "Unknown identifier: 'how'"
+      },
+      {
+        "input": "whats 50 usd in euros",
+        "description": "natural: whats X in Y",
+        "expectedType": "currency",
+        "actualType": "error",
+        "result": "Unknown identifier: 'whats'"
+      },
+      {
+        "input": "$100 to inr",
+        "description": "natural: $ symbol",
+        "expectedType": "currency",
+        "actualType": "error",
+        "result": "Unexpected character: '$' at position 0"
+      },
+      {
+        "input": "$50 to euros",
+        "description": "natural: $ to euros",
+        "expectedType": "currency",
+        "actualType": "error",
+        "result": "Unexpected character: '$' at position 0"
+      },
+      {
+        "input": "100 usd to xrp",
+        "description": "100 USD to XRP",
+        "expectedType": "crypto",
+        "actualType": "error",
+        "result": "fetch failed"
+      },
+      {
+        "input": "10 usd to doge",
+        "description": "10 USD to DOGE",
+        "expectedType": "crypto",
+        "actualType": "error",
+        "result": "fetch failed"
+      },
+      {
+        "input": "2pi",
+        "description": "implicit multiplication with constant",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: 'p' at position 1"
+      },
+      {
+        "input": "square root of 144",
+        "description": "natural: square root of",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'square'"
+      },
+      {
+        "input": "square root of 6",
+        "description": "natural: square root of 6",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'square'"
+      },
+      {
+        "input": "cube root of 27",
+        "description": "natural: cube root of",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'cube'"
+      },
+      {
+        "input": "what is 5 + 3",
+        "description": "natural: what is X + Y",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'what'"
+      },
+      {
+        "input": "whats 10 * 5",
+        "description": "natural: whats X * Y",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'whats'"
+      },
+      {
+        "input": "calculate 100 / 4",
+        "description": "natural: calculate X / Y",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'calculate'"
+      },
+      {
+        "input": "what is the square root of 16",
+        "description": "natural: what is the sqrt",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'what'"
+      },
+      {
+        "input": "2 to the power of 10",
+        "description": "natural: X to the power of Y",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: 't' at position 2"
+      },
+      {
+        "input": "5 squared",
+        "description": "natural: X squared",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: 's' at position 2"
+      },
+      {
+        "input": "3 cubed",
+        "description": "natural: X cubed",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: 'c' at position 2"
+      },
+      {
+        "input": "10 percent of 200",
+        "description": "natural: X percent of Y",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: 'p' at position 3"
+      },
+      {
+        "input": "20% of 500",
+        "description": "natural: X% of Y",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: 'o' at position 4"
+      },
+      {
+        "input": "half of 100",
+        "description": "natural: half of X",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'half'"
+      },
+      {
+        "input": "double 50",
+        "description": "natural: double X",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'double'"
+      },
+      {
+        "input": "triple 33",
+        "description": "natural: triple X",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'triple'"
+      },
+      {
+        "input": "one third of 99",
+        "description": "natural: one third of X",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'one'"
+      },
+      {
+        "input": "one quarter of 100",
+        "description": "natural: one quarter of X",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'one'"
+      },
+      {
+        "input": "log of 100",
+        "description": "natural: log of X",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'log'"
+      },
+      {
+        "input": "sine of 0",
+        "description": "natural: sine of X",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'sine'"
+      },
+      {
+        "input": "cosine of 0",
+        "description": "natural: cosine of X",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'cosine'"
+      },
+      {
+        "input": "tangent of 0",
+        "description": "natural: tangent of X",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'tangent'"
+      },
+      {
+        "input": "absolute value of -5",
+        "description": "natural: absolute value of",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'absolute'"
+      },
+      {
+        "input": "factorial of 5",
+        "description": "natural: factorial of",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'factorial'"
+      },
+      {
+        "input": "2 plus 3",
+        "description": "natural: word operators plus",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: 'p' at position 2"
+      },
+      {
+        "input": "10 minus 3",
+        "description": "natural: word operators minus",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: 'm' at position 3"
+      },
+      {
+        "input": "6 times 7",
+        "description": "natural: word operators times",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: 't' at position 2"
+      },
+      {
+        "input": "20 divided by 4",
+        "description": "natural: word operators divided by",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: 'd' at position 3"
+      },
+      {
+        "input": "2 raised to 10",
+        "description": "natural: raised to",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unexpected character: 'r' at position 2"
+      },
+      {
+        "input": "remainder of 10 divided by 3",
+        "description": "natural: remainder",
+        "expectedType": "math",
+        "actualType": "error",
+        "result": "Unknown identifier: 'remainder'"
+      }
+    ],
+    "thrownErrors": []
+  }

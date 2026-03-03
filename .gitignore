@@ -32,3 +32,5 @@ Thumbs.db
 # Others
 coverage/
 *.local
+
+test-report.txt

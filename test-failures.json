@@ -1,0 +1,11 @@
+{
+  "summary": {
+    "total": 706,
+    "passed": 706,
+    "failed": 0,
+    "errors": 0,
+    "passRate": "100.0%"
+  },
+  "failures": [],
+  "thrownErrors": []
+}

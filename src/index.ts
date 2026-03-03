@@ -69,6 +69,7 @@ export async function calculate(
         intent.query,
         intent.from,
         intent.to,
+        intent.time,
         options?.timezone,
       );
 

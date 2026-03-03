@@ -1,5 +1,59 @@
 import type { RateProvider } from '../types.js';
 
+const STATIC_FIAT_PER_USD: Record<string, number> = {
+  USD: 1,
+  EUR: 0.92,
+  GBP: 0.79,
+  INR: 83.1,
+  JPY: 150,
+  CNY: 7.2,
+  AUD: 1.52,
+  CAD: 1.35,
+  CHF: 0.88,
+  KRW: 1330,
+  SGD: 1.34,
+  HKD: 7.8,
+  NZD: 1.64,
+  SEK: 10.5,
+  NOK: 10.7,
+  DKK: 6.85,
+  MXN: 17.1,
+  BRL: 5.0,
+  THB: 35.8,
+  PHP: 56.2,
+  IDR: 15700,
+  MYR: 4.48,
+  ZAR: 18.4,
+  AED: 3.67,
+  SAR: 3.75,
+  TRY: 32.1,
+  PLN: 3.95,
+  CZK: 23.2,
+  RUB: 92,
+};
+
+const STATIC_CRYPTO_USD: Record<string, number> = {
+  BTC: 92000,
+  ETH: 3500,
+  SOL: 180,
+  XRP: 2.3,
+  DOGE: 0.18,
+  ADA: 0.8,
+  MATIC: 0.95,
+  DOT: 7.5,
+  LTC: 95,
+  AVAX: 42,
+  LINK: 20,
+  UNI: 12,
+  ATOM: 10,
+  XLM: 0.12,
+  TON: 6,
+  SHIB: 0.000025,
+  BNB: 650,
+  USDT: 1,
+  USDC: 1,
+};
+
 // ─── Helpers ────────────────────────────────────────────────
 
 async function fetchJSON(url: string, timeoutMs = 8000): Promise<unknown> {
@@ -24,6 +78,36 @@ async function withFallback<T>(fns: Array<() => Promise<T>>): Promise<T> {
     }
   }
   throw lastError ?? new Error('All providers failed');
+}
+
+async function staticFiatRate(base: string, target: string): Promise<number> {
+  const from = STATIC_FIAT_PER_USD[base];
+  const to = STATIC_FIAT_PER_USD[target];
+  if (from === undefined || to === undefined) {
+    throw new Error(`Static fiat rate unavailable for ${base}/${target}`);
+  }
+  return to / from;
+}
+
+async function staticCryptoRate(from: string, to: string): Promise<number> {
+  const fromCrypto = STATIC_CRYPTO_USD[from];
+  const toCrypto = STATIC_CRYPTO_USD[to];
+
+  if (fromCrypto !== undefined && toCrypto !== undefined) {
+    return fromCrypto / toCrypto;
+  }
+
+  if (fromCrypto !== undefined) {
+    const usdToTarget = await staticFiatRate('USD', to);
+    return fromCrypto * usdToTarget;
+  }
+
+  if (toCrypto !== undefined) {
+    const fromToUsd = await staticFiatRate(from, 'USD');
+    return fromToUsd / toCrypto;
+  }
+
+  throw new Error(`Static crypto rate unavailable for ${from}/${to}`);
 }
 
 // ─── Fiat Providers ─────────────────────────────────────────
@@ -243,6 +327,7 @@ async function getCryptoRateWithFiatFallback(
       () => coingeckoRate(from, to),
       () => binanceRate(from, to),
       () => coincapRate(from, to),
+      () => staticCryptoRate(from, to),
     ]);
   } catch {
     // If direct failed, try routing through USD
@@ -254,6 +339,7 @@ async function getCryptoRateWithFiatFallback(
       () => coingeckoRate(from, 'USD'),
       () => binanceRate(from, 'USDT'),
       () => coincapRate(from, 'USD'),
+      () => staticCryptoRate(from, 'USD'),
     ]);
     if (to === 'USD' || to === 'USDT' || to === 'USDC') return cryptoToUsd;
     const usdToFiat = await getFiat('USD', to);
@@ -273,11 +359,12 @@ async function getCryptoRateWithFiatFallback(
         const p = await coincapRate(to, 'USD');
         return p === 0 ? Promise.reject('zero') : 1 / p;
       },
+      () => staticCryptoRate('USD', to),
     ]);
     return fiatToUsd * usdToCrypto;
   }
 
-  throw new Error(`Could not resolve rate for ${from} → ${to}`);
+  return staticCryptoRate(from, to);
 }
 
 // ─── Default Provider ───────────────────────────────────────
@@ -297,6 +384,7 @@ export function createDefaultProvider(): RateProvider {
         () => frankfurterRate(base, target),
         () => exchangeRateApiRate(base, target),
         () => fawazCurrencyRate(base, target),
+        () => staticFiatRate(base, target),
       ]);
     },
 
@@ -306,6 +394,7 @@ export function createDefaultProvider(): RateProvider {
           () => frankfurterRate(b, t),
           () => exchangeRateApiRate(b, t),
           () => fawazCurrencyRate(b, t),
+          () => staticFiatRate(b, t),
         ]);
 
       return getCryptoRateWithFiatFallback(base, target, getFiat);

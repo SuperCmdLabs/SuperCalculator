@@ -310,7 +310,7 @@ for (const cat of UNIT_CATEGORIES) {
 }
 
 export function lookupUnit(token: string): UnitLookupEntry | undefined {
-  return _unitIndex.get(token.toLowerCase());
+  return _unitIndex.get(normalizeUnitToken(token));
 }
 
 /** Convert value from one unit to another within the same category */
@@ -332,4 +332,13 @@ export function convertUnit(value: number, from: UnitLookupEntry, to: UnitLookup
   // Standard factor-based conversion
   const baseValue = value * from.def.factor;
   return baseValue / to.def.factor;
+}
+
+function normalizeUnitToken(token: string): string {
+  return token
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ')
+    .replace(/²/g, '2')
+    .replace(/³/g, '3');
 }

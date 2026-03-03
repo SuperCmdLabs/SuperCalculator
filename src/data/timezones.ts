@@ -22,7 +22,7 @@ export const TIMEZONE_MAP: Record<string, string> = {
   'mexico city': 'America/Mexico_City', guadalajara: 'America/Mexico_City', monterrey: 'America/Monterrey',
   'sao paulo': 'America/Sao_Paulo', 'são paulo': 'America/Sao_Paulo', rio: 'America/Sao_Paulo', 'rio de janeiro': 'America/Sao_Paulo', brasilia: 'America/Sao_Paulo',
   'buenos aires': 'America/Argentina/Buenos_Aires', argentina: 'America/Argentina/Buenos_Aires',
-  lima: 'America/Lima', bogota: 'America/Bogota', santiago: 'America/Santiago',
+  lima: 'America/Lima', peru: 'America/Lima', bogota: 'America/Bogota', colombia: 'America/Bogota', santiago: 'America/Santiago', chile: 'America/Santiago',
   caracas: 'America/Caracas', quito: 'America/Guayaquil',
 
   // ─── Europe ───────────────────────────────────────────
@@ -166,6 +166,9 @@ export const COUNTRY_TZ: Record<string, string> = {
   canada: 'America/Toronto',
   mexico: 'America/Mexico_City',
   brazil: 'America/Sao_Paulo',
+  colombia: 'America/Bogota',
+  peru: 'America/Lima',
+  chile: 'America/Santiago',
   uk: 'Europe/London', 'united kingdom': 'Europe/London', britain: 'Europe/London', england: 'Europe/London',
   france: 'Europe/Paris', germany: 'Europe/Berlin', italy: 'Europe/Rome', spain: 'Europe/Madrid',
   netherlands: 'Europe/Amsterdam', belgium: 'Europe/Brussels', switzerland: 'Europe/Zurich',

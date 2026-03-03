@@ -17,7 +17,13 @@ export function evaluateDate(query: string): CalculateResult | ErrorResult {
 
   try {
     // ─── Relative simple ──────────────────────────────
-    if (lower === 'today' || lower === 'now' || /^(?:what(?:'s| is) )?(?:the )?(?:current )?date(?: today)?$/.test(lower)) {
+    if (
+      lower === 'today' ||
+      lower === 'now' ||
+      lower === 'date' ||
+      /^(?:(?:what(?:'s|s| is))\s+today|(?:what(?:'s|s| is))\s+today'?s date|what day is it|todays date|today'?s date|date today|current date|what is the date today)$/.test(lower) ||
+      /^(?:what(?:'s| is) )?(?:the )?(?:current )?date(?: today)?$/.test(lower)
+    ) {
       return formatDateResult(query, new Date());
     }
 
@@ -31,6 +37,30 @@ export function evaluateDate(query: string): CalculateResult | ErrorResult {
       const d = new Date();
       d.setDate(d.getDate() - 1);
       return formatDateResult(query, d);
+    }
+
+    if (lower === 'day after tomorrow') {
+      const d = new Date();
+      d.setDate(d.getDate() + 2);
+      return formatDateResult(query, d);
+    }
+
+    if (lower === 'day before yesterday') {
+      const d = new Date();
+      d.setDate(d.getDate() - 2);
+      return formatDateResult(query, d);
+    }
+
+    const whatDateMatch = lower.match(/^what date is (.+)$/);
+    if (whatDateMatch) {
+      const d = parseFlexibleDate(whatDateMatch[1]);
+      if (d) return formatDateResult(query, d);
+    }
+
+    const whenIsMatch = lower.match(/^(?:what day is|when is)\s+(.+)$/);
+    if (whenIsMatch) {
+      const d = parseFlexibleDate(whenIsMatch[1]);
+      if (d) return formatDateResult(query, d);
     }
 
     // ─── "next/last <day>" ────────────────────────────
@@ -87,7 +117,7 @@ export function evaluateDate(query: string): CalculateResult | ErrorResult {
     }
 
     // ─── Unix timestamp ──────────────────────────────
-    const unixMatch = lower.match(/^(?:unix\s+)?(?:timestamp\s+)?(\d{10,13})$/);
+    const unixMatch = lower.match(/^(?:unix\s+)?(?:timestamp\s+)?(\d{10,13}|0)$/);
     if (unixMatch) {
       const ts = parseInt(unixMatch[1]);
       // If 13 digits, it's milliseconds; if 10, seconds
@@ -110,14 +140,11 @@ export function evaluateDate(query: string): CalculateResult | ErrorResult {
     if (toUnixMatch) {
       const dateStr = toUnixMatch[1].trim();
       let d: Date;
-      if (dateStr === 'now' || dateStr === 'today') {
-        d = new Date();
-      } else {
-        d = new Date(dateStr);
-      }
-      if (isNaN(d.getTime())) {
+      const parsed = parseFlexibleDate(dateStr);
+      if (!parsed) {
         return { type: 'error', input: query, error: `Cannot parse date: '${dateStr}'` };
       }
+      d = parsed;
       const unix = Math.floor(d.getTime() / 1000);
       return {
         type: 'date',
@@ -231,12 +258,24 @@ function formatDateResult(
 }
 
 function parseFlexibleDate(str: string): Date | null {
-  if (str === 'today' || str === 'now') return new Date();
+  if (str === 'today' || str === 'now' || str === 'date') return new Date();
   if (str === 'tomorrow') {
     const d = new Date(); d.setDate(d.getDate() + 1); return d;
   }
   if (str === 'yesterday') {
     const d = new Date(); d.setDate(d.getDate() - 1); return d;
+  }
+  if (str === 'day after tomorrow') {
+    const d = new Date(); d.setDate(d.getDate() + 2); return d;
+  }
+  if (str === 'day before yesterday') {
+    const d = new Date(); d.setDate(d.getDate() - 2); return d;
+  }
+  const relativeDay = str.match(/^(next|last|this)\s+(.+)$/);
+  if (relativeDay) {
+    const direction = relativeDay[1] as 'next' | 'last' | 'this';
+    const dayIndex = DAY_NAMES.indexOf(relativeDay[2]);
+    if (dayIndex !== -1) return getRelativeDay(dayIndex, direction);
   }
   const d = new Date(str);
   return isNaN(d.getTime()) ? null : d;

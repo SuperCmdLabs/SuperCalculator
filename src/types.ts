@@ -38,7 +38,7 @@ export interface Config {
 // ─── Internal Types ─────────────────────────────────────────
 
 export type Intent =
-  | { kind: 'time'; query: string; from?: string; to?: string }
+  | { kind: 'time'; query: string; from?: string; to?: string; time?: string }
   | { kind: 'date'; query: string }
   | { kind: 'currency'; amount: number; from: string; to: string }
   | { kind: 'crypto'; amount: number; from: string; to: string }

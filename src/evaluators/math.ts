@@ -185,24 +185,10 @@ class Parser {
         if (right === 0) throw new Error('Division by zero');
         left /= right;
       } else if (op === '%') {
-        // Check if it's modulo or percentage
-        // Percentage if % is at end or followed by operator/end
-        const savedPos = this.pos;
-        this.skipWhitespace();
-        this.pos++; // skip %
-        this.skipWhitespace();
-        const next = this.expr[this.pos];
-        if (next === undefined || /[+\-*/^)|&<>]/.test(next)) {
-          // It's percentage of left — but we already consumed %, so treat as modulo for now
-          // Actually, let's handle percentage in parseUnary/postfix
-          this.pos = savedPos;
-          break;
-        } else {
-          // It's modulo
-          this.pos = savedPos;
-          this.consume();
-          left = left % this.parseExponentiation();
-        }
+        this.consume();
+        left = left % this.parseExponentiation();
+      } else if (op && /[([a-zA-Zπτφ_]/.test(op)) {
+        left *= this.parseExponentiation();
       } else {
         break;
       }
@@ -247,7 +233,7 @@ class Parser {
       if (this.expr[this.pos] === '!') {
         this.pos++;
         value = factorial(value);
-      } else if (this.expr[this.pos] === '%') {
+      } else if (this.expr[this.pos] === '%' && this.shouldTreatAsPercentage()) {
         this.pos++;
         value = value / 100;
       } else {
@@ -280,6 +266,13 @@ class Parser {
     }
 
     throw new Error(`Unexpected character: '${this.expr[this.pos]}' at position ${this.pos}`);
+  }
+
+  private shouldTreatAsPercentage(): boolean {
+    let i = this.pos + 1;
+    while (i < this.expr.length && /\s/.test(this.expr[i])) i++;
+    const next = this.expr[i];
+    return next === undefined || /[+\-*/^)%|&<>]/.test(next);
   }
 
   private charAt(i: number): string {
@@ -338,14 +331,15 @@ class Parser {
     // Check for function call
     this.skipWhitespace();
     if (this.expr[this.pos] === '(') {
-      // Two-arg function?
+      if (name === 'max' || name === 'min') {
+        const args = this.parseArguments();
+        if (args.length === 0) throw new Error(`Function '${name}' requires at least one argument`);
+        return name === 'max' ? Math.max(...args) : Math.min(...args);
+      }
       if (FUNCTIONS2[name]) {
-        this.consume('(');
-        const a = this.parseBitwiseOr();
-        this.consume(',');
-        const b = this.parseBitwiseOr();
-        this.consume(')');
-        return FUNCTIONS2[name](a, b);
+        const args = this.parseArguments();
+        if (args.length !== 2) throw new Error(`Function '${name}' expects 2 arguments`);
+        return FUNCTIONS2[name](args[0], args[1]);
       }
       if (FUNCTIONS[name]) {
         this.consume('(');
@@ -360,6 +354,27 @@ class Parser {
     if (CONSTANTS[name] !== undefined) return CONSTANTS[name];
 
     throw new Error(`Unknown identifier: '${name}'`);
+  }
+
+  private parseArguments(): number[] {
+    const args: number[] = [];
+    this.consume('(');
+    this.skipWhitespace();
+    if (this.expr[this.pos] === ')') {
+      this.consume(')');
+      return args;
+    }
+    while (true) {
+      args.push(this.parseBitwiseOr());
+      this.skipWhitespace();
+      if (this.expr[this.pos] === ',') {
+        this.pos++;
+        continue;
+      }
+      break;
+    }
+    this.consume(')');
+    return args;
   }
 }
 
@@ -380,7 +395,8 @@ export function evaluateMath(
   precision: number = 10,
 ): CalculateResult | ErrorResult {
   try {
-    const parser = new Parser(expression);
+    const normalizedExpression = normalizeMathExpression(expression);
+    const parser = new Parser(normalizedExpression);
     const result = parser.parse();
 
     // Format the number
@@ -411,7 +427,10 @@ export function evaluateMath(
       input: expression,
       result,
       formatted,
-      metadata,
+      metadata: {
+        ...metadata,
+        normalizedExpression,
+      },
     };
   } catch (err) {
     return {
@@ -420,4 +439,49 @@ export function evaluateMath(
       error: err instanceof Error ? err.message : 'Invalid expression',
     };
   }
+}
+
+function normalizeMathExpression(expression: string): string {
+  let normalized = expression.trim().replace(/\s+/g, ' ');
+
+  normalized = normalized.replace(/^(?:(?:what(?:'s|s| is))\s+the\s+|(?:what(?:'s|s| is))\s+|calculate\s+)/i, '');
+  normalized = normalized.replace(/^the\s+/i, '');
+
+  const wrappers: Array<[RegExp, string]> = [
+    [/^square root of (.+)$/i, 'sqrt($1)'],
+    [/^cube root of (.+)$/i, 'cbrt($1)'],
+    [/^log of (.+)$/i, 'log($1)'],
+    [/^sine of (.+)$/i, 'sin($1)'],
+    [/^cosine of (.+)$/i, 'cos($1)'],
+    [/^tangent of (.+)$/i, 'tan($1)'],
+    [/^absolute value of (.+)$/i, 'abs($1)'],
+    [/^factorial of (.+)$/i, '($1)!'],
+    [/^half of (.+)$/i, '($1) / 2'],
+    [/^double (.+)$/i, '2 * ($1)'],
+    [/^triple (.+)$/i, '3 * ($1)'],
+    [/^one third of (.+)$/i, '($1) / 3'],
+    [/^one quarter of (.+)$/i, '($1) / 4'],
+    [/^remainder of (.+?) divided by (.+)$/i, '($1) % ($2)'],
+    [/^(.+?) to the power of (.+)$/i, '($1) ^ ($2)'],
+    [/^(.+?) raised to (.+)$/i, '($1) ^ ($2)'],
+    [/^(.+?) squared$/i, '($1) ^ 2'],
+    [/^(.+?) cubed$/i, '($1) ^ 3'],
+    [/^(\d+(?:\.\d+)?) percent of (.+)$/i, '($1%) * ($2)'],
+    [/^(.+?%) of (.+)$/i, '($1) * ($2)'],
+  ];
+
+  for (const [pattern, replacement] of wrappers) {
+    if (pattern.test(normalized)) {
+      normalized = normalized.replace(pattern, replacement);
+      break;
+    }
+  }
+
+  normalized = normalized
+    .replace(/\bdivided by\b/gi, '/')
+    .replace(/\btimes\b/gi, '*')
+    .replace(/\bplus\b/gi, '+')
+    .replace(/\bminus\b/gi, '-');
+
+  return normalized.replace(/\s+/g, ' ').trim();
 }
