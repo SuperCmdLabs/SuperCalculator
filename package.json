@@ -1,6 +1,6 @@
 {
   "name": "@supercmd/calculator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Powerful natural language calculator — math, units, currency, crypto, time zones, dates",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
