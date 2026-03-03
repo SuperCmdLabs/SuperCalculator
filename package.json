@@ -1,0 +1,56 @@
+{
+  "name": "@supercmd/calculator",
+  "version": "1.0.0",
+  "description": "Powerful natural language calculator — math, units, currency, crypto, time zones, dates",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "calculator",
+    "natural-language",
+    "unit-conversion",
+    "currency",
+    "crypto",
+    "timezone",
+    "math",
+    "raycast",
+    "supercmd"
+  ],
+  "author": "supercmdlabs",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/SuperCmdLabs/SuperCalculator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SuperCmdLabs/SuperCalculator/issues"
+  },
+  "homepage": "https://github.com/SuperCmdLabs/SuperCalculator#readme"
+}
