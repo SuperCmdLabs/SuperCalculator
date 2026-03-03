@@ -30,7 +30,7 @@ const TIME_IN_PATTERNS = [
   /^(?:what time is it|whats the time|what is the time|current time|time now) (?:in|at) (.+)$/i,
   /^(?:now|current time) in (.+)$/i,
 ];
-const TIME_EXPLICIT_CONVERT_PATTERN = /^(midnight|noon|\d{1,2}(?::\d{2})?(?:\s*(?:am|pm))?)\s+(.+?)\s+to\s+(.+?)$/i;
+const TIME_EXPLICIT_CONVERT_PATTERN = /^(midnight|noon|\d{1,2}(?::\d{2})?(?:\s*(?:am|pm))?)\s+(?:in\s+)?(.+?)\s+to\s+(.+?)(?:\s+time)?$/i;
 const TIME_CONVERT_PATTERN = /^(.+?) to (.+?)(?: time)?$/i;
 const TIME_NOW_PATTERN = /^(?:what(?:'s| is) )?(?:the )?(?:current )?time(?: now)?$/i;
 
@@ -41,7 +41,7 @@ function tryTimeIntent(input: string): Intent | null {
   for (const pattern of TIME_IN_PATTERNS) {
     match = input.match(pattern);
     if (match) {
-      const place = match[1].trim();
+      const place = normalizeTimePlace(match[1]);
       const tz = resolveTimezone(place);
       if (tz) return { kind: 'time', query: input, to: tz };
       return { kind: 'time', query: input, to: place };
@@ -51,8 +51,8 @@ function tryTimeIntent(input: string): Intent | null {
   match = input.match(TIME_EXPLICIT_CONVERT_PATTERN);
   if (match) {
     const time = match[1].trim();
-    const from = match[2].trim();
-    const to = match[3].trim();
+    const from = normalizeTimePlace(match[2]);
+    const to = normalizeTimePlace(match[3]);
     const fromTz = resolveTimezone(from);
     const toTz = resolveTimezone(to);
     if (fromTz && toTz) {
@@ -63,8 +63,8 @@ function tryTimeIntent(input: string): Intent | null {
   // "<zone> to <zone> time"
   match = input.match(TIME_CONVERT_PATTERN);
   if (match) {
-    const from = match[1].trim();
-    const to = match[2].trim();
+    const from = normalizeTimePlace(match[1]);
+    const to = normalizeTimePlace(match[2]);
     const fromTz = resolveTimezone(from);
     const toTz = resolveTimezone(to);
     if (fromTz || toTz) {
@@ -86,14 +86,14 @@ function tryTimeIntent(input: string): Intent | null {
   // "<place> time" / "<place> time now" / "<place> now"
   const placeSuffixMatch = input.match(/^(.+?)\s+(?:time|now|time now)$/i);
   if (placeSuffixMatch) {
-    const place = placeSuffixMatch[1].trim();
+    const place = normalizeTimePlace(placeSuffixMatch[1]);
     const tz = resolveTimezone(place);
     if (tz) return { kind: 'time', query: place, to: tz };
   }
 
   // Bare place name — "madison", "tokyo", "new york"
   // Only match if the entire input resolves to a known timezone
-  const tz = resolveTimezone(input);
+  const tz = resolveTimezone(normalizeTimePlace(input));
   if (tz) {
     return { kind: 'time', query: input, to: tz };
   }
@@ -220,4 +220,12 @@ function normalizeConversionInput(input: string): string {
   normalized = normalized.replace(/^([$€£¥₹₩₽₺₦₵₪฿])\s*([\d.,]+)/, '$2 $1');
 
   return normalized;
+}
+
+function normalizeTimePlace(value: string): string {
+  return normalizeWhitespace(value)
+    .replace(/^(?:time|current time|time now|now)\s+(?:in|at)\s+/i, '')
+    .replace(/^(?:in|at)\s+/i, '')
+    .replace(/\s+(?:time|now|time now)$/i, '')
+    .trim();
 }
